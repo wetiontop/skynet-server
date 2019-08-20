@@ -1,0 +1,33 @@
+root = "./"
+
+thread = 4
+harbor = 0
+bootstrap = "snlua bootstrap"
+
+
+-- 日志服务配置
+log_path = "./log/" -- 日志输出目录
+log_level = "DEBUG"	-- 日志输出等级（DEBUG，INFO，WARN，ERROR，FATAL）
+log_cycle = "day" -- 日志周期（year，month，day，hour，min，sec）
+
+
+lualoader = root.."skynet/lualib/loader.lua"
+
+preload = root.."src/preload.lua"
+
+cpath = root.."3rd/cservice/?.so;"..
+        root.."skynet/cservice/?.so"
+
+lua_cpath = root.."3rd/luaclib/?.so;"..
+            root.."skynet/luaclib/?.so"
+
+luaservice = root.."src/?.lua;"..
+             root.."src/service/?.lua;"..
+             root.."3rd/service/?.lua;"..
+             root.."skynet/service/?.lua"
+
+lua_path = root.."src/?.lua;"..
+           root.."3rd/lualib/?.lua;"..
+           root.."skynet/lualib/?.lua;"..
+           root.."skynet/lualib/compat10/?.lua;"..
+           root.."skynet/lualib/?/init.lua"

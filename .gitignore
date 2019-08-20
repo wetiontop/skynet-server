@@ -50,3 +50,12 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# General
+.DS_Store
+
+log/
+3rd/cservice/
+3rd/luaclib/
+3rd/lualib/
+3rd/service/

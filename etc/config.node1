@@ -1,0 +1,9 @@
+include("config-public")
+
+start = "main"
+nodename = "node1"
+
+-- 后台服务配置
+if $DAEMON then
+	daemon = "./etc/node1.pid"
+end

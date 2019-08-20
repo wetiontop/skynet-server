@@ -1,0 +1,10 @@
+include("config-public")
+
+start = "main"
+nodename = "node2"
+
+-- 后台服务配置
+if $DAEMON then
+	daemon = "./etc/node2.pid"
+end
+
