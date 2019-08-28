@@ -10,3 +10,6 @@
 [submodule "3rd/lua-protobuf"]
 	path = 3rd/lua-protobuf
 	url = https://github.com/starwing/lua-protobuf.git
+[submodule "3rd/lua-openssl"]
+	path = 3rd/lua-openssl
+	url = https://github.com/zhaozg/lua-openssl.git

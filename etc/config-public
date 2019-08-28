@@ -6,6 +6,8 @@ bootstrap = "snlua bootstrap"
 
 
 -- 日志服务配置
+logger = "logger"
+logservice = "snlua"
 log_path = "./log/" -- 日志输出目录
 log_level = "DEBUG"	-- 日志输出等级（DEBUG，INFO，WARN，ERROR，FATAL）
 log_cycle = "day" -- 日志周期（year，month，day，hour，min，sec）
