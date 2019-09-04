@@ -7,8 +7,8 @@ require("code")
 -- 节点配置
 require("node")
 
--- 类对象
-require("base.class")
+-- 扩展api
+require("base.luaext")
 
 -- 日志
 require("base.logger")
