@@ -7,8 +7,9 @@ require("code")
 -- 节点配置
 require("node")
 
--- 扩展api
+-- 基础
 require("base.luaext")
-
--- 日志
-require("base.logger")
+md5 = require("base.md5")
+xtea = require("base.xtea")
+base64 = require("base.base64")
+log = require("base.logger")

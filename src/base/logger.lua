@@ -152,7 +152,7 @@ local function print_log(level, ...)
 end
 
 
-log = {}
+local log = {}
 
 function log.debug(fmt, ...)
 	print_log(LOG_LEVEL.DEBUG, fmt, ...)
@@ -173,3 +173,5 @@ end
 function log.fatal(fmt, ...)
 	print_log(LOG_LEVEL.FATAL, fmt, ...)
 end
+
+return log
