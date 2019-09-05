@@ -46,7 +46,6 @@ elif [ $cmd == "kill" ]; then
         pkill -9 skynet
         echo "kill all ok"
     fi
-    kill `cat $root/etc/skynet.pid`
     exit 0;
 else
     export DAEMON=false
