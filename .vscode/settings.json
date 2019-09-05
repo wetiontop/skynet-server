@@ -3,6 +3,10 @@
         "version",
         "node",
         "class",
-        "log"
+        "log",
+        "tolua"
+    ],
+    "Lua.diagnostics.disable": [
+        "lowercase-global"
     ]
 }

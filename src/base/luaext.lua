@@ -24,11 +24,11 @@ function checktable(value)
 end
 
 -- 如果表格中指定 key 的值为 nil，或者输入值不是表格，返回 false，否则返回 true
--- @param table hashtable 要检查的表格
+-- @param table t 要检查的表格
 -- @param mixed key 要检查的键名
-function isset(hashtable, key)
-    local t = type(hashtable)
-    return (t == "table" or t == "userdata") and hashtable[key] ~= nil
+function isset(t, key)
+    local t = type(t)
+    return (t == "table" or t == "userdata") and t[key] ~= nil
 end
 
 
@@ -62,40 +62,6 @@ function table.values(t)
     local result = {}
     for k, v in pairs(t) do
         table.insert(result, v)
-    end
-    return result
-end
-
--- 浅拷贝
--- @param table t 目标表格
--- @param bool nometa 是否要元表
-function table.clone(t, nometa)
-    local result = {}
-    if not nometa then
-        setmetatable(result, getmetatable(t))
-    end
-    for k, v in pairs (t) do
-        result[k] = v
-    end
-    return result
-end
-
--- 深拷贝
--- @param table t 目标表格
--- @param bool nometa 是否要元表
-function table.copy(t, nometa)
-    local result = {}
-
-    if not nometa then
-        setmetatable(result, getmetatable(t))
-    end
-
-    for k, v in pairs(t) do
-        if type(v) == "table" then
-            result[k] = copy(v)
-        else
-            result[k] = v
-        end
     end
     return result
 end
@@ -159,6 +125,35 @@ function table.unique(t)
     return n
 end
 
+--比较两个table，相同返回true，不相同返回false
+function table.compare(t1, t2)
+    if type(t1) ~= "table" or type(t2) ~= "table" then return false end
+
+    for i, v in pairs(t1) do
+        if type(v) == "table" then
+            if t2[i] then
+                local rst = table.compare(v, t2[i])
+                if not rst then return false end
+            end
+        else
+            if t2[i] ~= v then return false end
+        end
+    end
+
+    for i, v in pairs(t2) do
+        if type(v) == "table" then
+            if t1[i] then
+                local rst = table.compare(v, t1[i])
+                if not rst then return false end
+            end
+        else
+            if t1[i] ~= v then return false end
+        end
+    end
+
+    return true
+end
+
 -- 从数组中查找指定值，返回其索引，如果没找到返回 false
 -- @param table a 数值
 -- @param mixed value 要查找的值
@@ -186,6 +181,24 @@ function table.insertto(dest, src, begin)
     end
 end
 
+-- 截取一个数组的一部分
+-- @begin 起始下标（<0表示从后往前算）
+-- @length 截取长度（nil表示后面所有）
+function table.slice(a, begin, length)
+    local part = {}
+
+    local n = #a
+    if n > 0 then
+        begin = math.max(1, begin < 0 and n + begin + 1 or begin)
+        length = length and math.min(n - begin + 1, length) or n - begin + 1
+        for i = 1, length do
+            part[i] = a[begin + i - 1]
+        end
+    end
+
+    return part
+end
+
 -- 从数组中删除指定值，返回删除的值的个数
 -- @param table a 数组
 -- @param mixed value 要删除的值
@@ -203,6 +216,72 @@ function table.removebyvalue(a, value, removeall)
         i = i + 1
     end
     return c
+end
+
+-- 数组翻转
+function table.revert(a)
+    local rt = {}
+    local n = #a + 1
+    for i, v in ipairs(a) do
+        rt[n - i] = v
+    end
+    return rt
+end
+
+-- 产生一个[min, max]拿count个不重复的随机数组
+function table.randomvalues(min, max, count)
+    if (max < min) or (count > max - min + 1) then return end
+
+    local rt = {}
+    local arr = {}
+    for i = min, max do table.insert(arr, i) end --生成一个[a, b]的数组
+
+    local len = #arr
+    for i = 1, count do
+        if i < len then
+            local j = math.random(i + 1, len)
+            local tmp = arr[i]
+            arr[i] = arr[j]
+            arr[j] = tmp
+        end
+
+        table.insert(rt, arr[i])
+    end
+
+    return rt
+end
+
+-- weights概率权重表，如{10 ，30 ，40} ，count生成的随机序列个数,返回随机序列
+function table.randomindexs(weights, count)
+    local total = 0
+    for k, v in pairs(weights) do
+        total = total + v
+    end
+
+    local tb = {}
+    for i = 1, count do
+        local s = math.random(1, total)
+        for k, v in pairs(weights) do
+            if s <= v then
+                table.insert(tb, k)
+                break
+            else
+                s = s - v
+            end
+        end
+    end
+    return tb
+end
+
+-- 将一个数组内元素随机洗牌
+function table.shuffle(a)
+    local len = #a
+    for i = len, 1, -1 do
+        local j = math.random(1, len)
+        a[i], a[j] = a[j], a[i]
+    end
+
+    return a
 end
 
 
@@ -244,8 +323,6 @@ function string.text2html(s)
     s = string.nl2br(s)
     return s
 end
-
-
 
 -- 用指定字符或字符串分割输入字符串，返回包含分割结果的数组
 -- @param string s 输入字符串
@@ -332,6 +409,46 @@ function string.formatnumberthousands(num)
         if k == 0 then break end
     end
     return formatted
+end
+
+-- 字符串转16进制
+-- @param string s 原字符串
+-- @param number ln 换行位置（可选）
+-- @param string sep 分隔符（可选）
+--	string.tohex('abcdef', 4, ":") => '61:62:63:64\n65:66'
+--	string.tohex('abcdef') => '616263646566'
+function string.tohex(s, ln, sep)
+	if #s == 0 then return "" end
+	if not ln then -- no newline, no separator: do it the fast way!
+		return (s:gsub('.',
+			function(c) return string.format('%02x', string.byte(c)) end
+			))
+	end
+	sep = sep or "" -- optional separator between each byte
+	local t = {}
+	for i = 1, #s - 1 do
+		t[#t + 1] = string.format("%02x%s", s:byte(i),
+				(i % ln == 0) and '\n' or sep)
+	end
+	-- last byte, without any sep appended
+	t[#t + 1] = string.format("%02x", s:byte(#s))
+	return string.concat(t)
+end
+
+-- 16进制转字符串
+-- @param string hs 16进制串
+-- @param bool unsafe 不安全（可选）
+function string.hexto(hs, unsafe)
+	local tonumber = tonumber
+	if not unsafe then
+		hs = string.gsub(hs, "%s+", "") -- remove whitespaces
+		if string.find(hs, '[^0-9A-Za-z]') or #hs % 2 ~= 0 then
+			error("invalid hex string")
+		end
+	end
+	return hs:gsub(	'(%x%x)',
+		function(c) return string.char(tonumber(c, 16)) end
+		)
 end
 
 
@@ -529,7 +646,7 @@ function handler(obj, method)
 end
 
 -- 对象转字符串
-local dump(obj)
+function dump(obj)
     local getIndent, quoteStr, wrapKey, wrapVal, dumpObj
     getIndent = function(level)
         return string.rep("\t", level)
@@ -571,4 +688,40 @@ local dump(obj)
         return table.concat(tokens, "\n")
     end
     return dumpObj(obj, 0)
+end
+
+-- 克隆对象
+function clone(obj)
+    local lookup_table = {}
+    local function _copy(obj)
+        if type(obj) ~= "table" then
+            return obj
+        elseif lookup_table[obj] then
+            return lookup_table[obj]
+        end
+        local new_table = {}
+        lookup_table[obj] = new_table
+        for key, value in pairs(obj) do
+            new_table[_copy(key)] = _copy(value)
+        end
+        return setmetatable(new_table, getmetatable(obj))
+    end
+    return _copy(obj)
+end
+
+-- 拷贝对象
+function copy(obj)
+    if not obj then return obj end
+     local new = {}
+     for k, v in pairs(obj) do
+        local t = type(v)
+        if t == "table" then
+            new[k] = copy(v)
+        elseif t == "userdata" then
+            new[k] = copy(v)
+        else
+            new[k] = v
+        end
+     end
+    return new
 end

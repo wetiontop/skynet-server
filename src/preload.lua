@@ -9,7 +9,4 @@ require("node")
 
 -- 基础
 require("base.luaext")
-md5 = require("base.md5")
-xtea = require("base.xtea")
-base64 = require("base.base64")
 log = require("base.logger")

@@ -26,7 +26,7 @@ $(CSERVICE_PATH):
 $(LUACLIB_PATH)/cjson.so : lua-cjson/strbuf.c lua-cjson/fpconv.c lua-cjson/lua_cjson.c
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
 
-#lfs
+# filesystem
 $(LUACLIB_PATH)/lfs.so : lua-filesystem/src/lfs.c
 	$(CC) $(CFLAGS) $(SHARED) $^ -o $@
 
