@@ -4,13 +4,19 @@ thread = 4
 harbor = 0
 bootstrap = "snlua bootstrap"
 
+-- 通信协议
+prototype = "tcp"  -- tcp/ws
+protopack = "spb"   -- pb/spb/xpb/
+
+node_cluster = '{ \
+    "admin":"127.0.0.1:2527", \
+    "node1":"127.0.0.1:2528", \
+    "node2":"127.0.0.1:2529" \
+}'
 
 -- 日志服务配置
-logger = "logger"
-logservice = "snlua"
-log_path = "./log/" -- 日志输出目录
-log_level = "DEBUG"	-- 日志输出等级（DEBUG，INFO，WARN，ERROR，FATAL）
-log_cycle = "day" -- 日志周期（year，month，day，hour，min，sec）
+-- logger = "logger"
+-- logservice = "snlua"
 
 
 lualoader = root.."skynet/lualib/loader.lua"
@@ -31,5 +37,4 @@ luaservice = root.."src/?.lua;"..
 lua_path = root.."src/?.lua;"..
            root.."3rd/lualib/?.lua;"..
            root.."skynet/lualib/?.lua;"..
-           root.."skynet/lualib/compat10/?.lua;"..
            root.."skynet/lualib/?/init.lua"

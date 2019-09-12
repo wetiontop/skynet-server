@@ -50,11 +50,3 @@ clean :
 	rm -rf $(LUACLIB_PATH)/*
 	rm -rf $(SERVICE_PATH)/*
 	rm -rf $(CSERVICE_PATH)/*
-
-update3rd:
-	rm -rf lua-cjson
-	rm -rf lua-filesystem
-	rm -rf lua-protobuf
-	git submodule update --init
-
-.PHONY: all clean update3rd

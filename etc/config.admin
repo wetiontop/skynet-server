@@ -1,9 +1,0 @@
-include("config-public")
-
-start = "main"
-nodename = "admin"
-
--- 后台服务配置
-if $DAEMON then
-	daemon = "./etc/admin.pid"
-end
