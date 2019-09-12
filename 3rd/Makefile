@@ -8,7 +8,7 @@ CSERVICE_PATH ?= cservice
 
 LUA_INC ?= $(SKYNET_PATH)/3rd/lua
 LUA_LIB ?= $(SKYNET_PATH)/3rd/lua/liblua.a
-CFLAGS = -g -O2 -Wall -I$(LUA_INC) $(LUA_LIB) $(MYFLAGS)
+CFLAGS = -g -O2 -Wall -I$(LUA_INC)
 
 $(LUALIB_PATH):
 	mkdir -p $(LUALIB_PATH)
@@ -55,6 +55,6 @@ update3rd:
 	rm -rf lua-cjson
 	rm -rf lua-filesystem
 	rm -rf lua-protobuf
-	-git submodule update --init
+	git submodule update --init
 
 .PHONY: all clean update3rd
