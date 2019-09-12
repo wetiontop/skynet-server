@@ -8,6 +8,3 @@ require("code")
 require("base.luaext")
 
 cjson = require("cjson")
-
--- 状态码
-require("node")
